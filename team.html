@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Gym Bros - Team</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="team.css" />
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <header class="navbar">
+        <div class="logo">Gym <span>Bros</span></div>
+
+        <div class="nav-links">
+            <a href="team.html" class="active">Team</a>
+            <a href="workout.html">Workout</a>
+        </div>
+    </header>
+
+    <!-- BACKGROUND -->
+    <div class="bg"></div>
+    <div class="overlay"></div>
+
+    <!-- CONTENT -->
+    <main class="container">
+
+        <h1>TEAM</h1>
+
+        <!-- CHECK-IN -->
+        <button class="check-btn" onclick="checkIn()">CHECK IN</button>
+
+        <p id="statusText">Tap to Check In</p>
+
+        <!-- MEMBERS -->
+        <div class="card" id="membersList"></div>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

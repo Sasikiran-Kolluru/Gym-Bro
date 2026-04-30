@@ -1,0 +1,157 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  overflow: hidden;
+  color: white;
+}
+
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.logo span {
+  color: #ff5252;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 100vh;
+}
+
+/* VIDEO */
+.bg-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle farthest-corner at 9.8% 19.4%,
+    rgba(223,75,75,0.6) 11.6%,
+    rgba(20,12,12,0.9) 90.5%
+  );
+}
+
+/* TEXT */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ALIGNMENT FIX */
+.hero-content h1 {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 120px;
+  font-weight: 900;
+  padding: 0 80px;
+}
+
+.left {
+  transform: translateX(-10px);
+}
+
+.right {
+  transform: translateX(40px); /* 👈 SHIFT RIGHT FIX */
+}
+
+/* LOGIN PANEL (CORNER) */
+.login-panel {
+  position: fixed;
+  top: 80px;
+  right: -350px; /* hidden */
+  width: 300px;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px 0 0 12px;
+  transition: 0.3s;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ACTIVE STATE */
+.login-panel.active {
+  right: 0;
+}
+
+/* HEADER */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* CLOSE BUTTON */
+.close {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* INPUT FIX */
+.login-panel input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  width: 100%;
+  outline: none;
+}
+
+/* BUTTON */
+.comic-button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #ff5252;
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0px #000;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.comic-button:hover {
+  background-color: #fff;
+  color: #ff5252;
+  border: 2px solid #ff5252;
+  box-shadow: 5px 5px 0px #ff5252;
+}
+
+.comic-button:active {
+  background-color: #fcf414;
+  box-shadow: none;
+  transform: translateY(4px);
+}

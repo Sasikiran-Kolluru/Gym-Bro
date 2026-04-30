@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gym Bros</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">Gym <span>Bros</span></div>
+
+    <div class="nav-actions">
+      <button class="comic-button" onclick="openLogin()">Login</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- VIDEO BACKGROUND -->
+    <video autoplay muted loop class="bg-video">
+      <source src="bgvid.mp4" type="video/mp4">
+    </video>
+
+    <!-- OVERLAY -->
+    <div class="overlay"></div>
+
+    <!-- TEXT -->
+    <div class="hero-content">
+      <h1>
+        <span class="left">GYM</span>
+        <span class="right">BROS</span>
+      </h1>
+    </div>
+
+  </section>
+
+  <!-- LOGIN PANEL -->
+  <div id="loginPanel" class="login-panel">
+    <div class="panel-header">
+      <h3>Login</h3>
+      <span class="close" onclick="closeLogin()">×</span>
+    </div>
+
+    <input id="nameInput" type="text" placeholder="Username" />
+    <input id="passwordInput" type="password" placeholder="Password" />
+
+    <button class="comic-button" onclick="handleLogin()">Submit</button>
+  </div>
+
+  <!-- PLACEHOLDER SECTION (future navigation hint) -->
+  <div class="placeholder-nav">
+    <p>After login:</p>
+    <ul>
+      <li>→ Team Page (team.html)</li>
+      <li>→ Workout Page (workout.html)</li>
+    </ul>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
