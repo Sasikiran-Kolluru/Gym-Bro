@@ -1,45 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Gym Bros - Team</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="team.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym Bros - Team Roster</title>
+  <link rel="stylesheet" href="team.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 </head>
-
 <body>
+  <div class="background-glow"></div>
+  
+  <nav class="glass-nav">
+    <div class="logo">GYM<span>BROS</span></div>
+    <div class="nav-links">
+      <a href="team.html" class="active">TEAM</a>
+      <a href="workout.html">WORKOUTS</a>
+      <a href="index.html" class="logout" onclick="localStorage.removeItem('user')">EXIT</a>
+    </div>
+  </nav>
 
-    <!-- NAV -->
-    <header class="navbar">
-        <div class="logo">Gym <span>Bros</span></div>
-
-        <div class="nav-links">
-            <a href="team.html" class="active">Team</a>
-            <a href="workout.html">Workout</a>
-        </div>
+  <main class="container">
+    <header class="page-header">
+      <h1>SQUAD STATUS</h1>
+      <p>Today's Check-ins</p>
     </header>
 
-    <!-- BACKGROUND -->
-    <div class="bg"></div>
-    <div class="overlay"></div>
+    <div class="add-member-form" style="display: none;">
+      <input type="text" id="newMemberName" placeholder="New member username">
+      <button class="neon-btn-small" onclick="addMember()">ADD</button>
+    </div>
 
-    <!-- CONTENT -->
-    <main class="container">
+    <div class="status-card glass-panel">
+      <div id="membersList" class="members-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
 
-        <h1>TEAM</h1>
+    <div class="checkin-container">
+      <button class="check-btn neon-btn-large" onclick="checkIn()">CHECK IN</button>
+      <p id="statusText" class="status-text">Tap to Check In</p>
+    </div>
+  </main>
 
-        <!-- CHECK-IN -->
-        <button class="check-btn" onclick="checkIn()">CHECK IN</button>
-
-        <p id="statusText">Tap to Check In</p>
-
-        <!-- MEMBERS -->
-        <div class="card" id="membersList"></div>
-
-    </main>
-
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>

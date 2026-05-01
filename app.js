@@ -1,9 +1,14 @@
 // GLOBAL CONSTANTS
-const API_BASE = '/api';
+const CURRENT_USER_KEY = 'user';
 
+// Helpers
 function getSavedUser() {
-  const user = localStorage.getItem('user');
+  const user = localStorage.getItem(CURRENT_USER_KEY);
   return user ? JSON.parse(user) : null;
+}
+
+function getTodayStr() {
+  return new Date().toDateString();
 }
 
 // ---------------------------
@@ -34,23 +39,21 @@ async function handleLogin() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/login`, {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
     });
-    
     const data = await res.json();
     if (!res.ok) {
       alert(data.error || "Login failed");
       return;
     }
-
-    localStorage.setItem("user", JSON.stringify(data.user));
+    
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(data));
     window.location.href = "team.html";
   } catch (err) {
-    console.error(err);
-    alert("Could not connect to server");
+    alert("Error connecting to server");
   }
 }
 
@@ -75,24 +78,33 @@ async function renderTeam() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/team`);
-    const team = await res.json();
+    const [usersRes, checkinsRes] = await Promise.all([
+      fetch('/api/users'),
+      fetch('/api/checkins')
+    ]);
+    
+    const members = await usersRes.json();
+    const allCheckins = await checkinsRes.json();
+    
+    const today = getTodayStr();
+    const todayCheckins = allCheckins.filter(c => c.date === today);
+    const checkedInUserIds = new Set(todayCheckins.map(c => c.userId));
 
     const list = document.getElementById("membersList");
     if (!list) return;
 
     list.innerHTML = "";
     
-    // Find logged in user status
     let myStatus = null;
     
-    team.forEach(member => {
-      if (member.id === user.id) myStatus = member.checkedIn;
+    members.forEach(member => {
+      // MongoDB IDs are returned as strings in ._id
+      if (member._id === user._id) myStatus = checkedInUserIds.has(member._id) ? today : null;
       
-      const isCheckedIn = !!member.checkedIn;
+      const isCheckedIn = checkedInUserIds.has(member._id);
       list.innerHTML += `
         <div class="member">
-          <span>${member.name} ${member.id === user.id ? '(You)' : ''}</span>
+          <span>${member.username} ${member._id === user._id ? '(You)' : ''}</span>
           <div class="dot ${isCheckedIn ? 'green' : 'red'}"></div>
         </div>
       `;
@@ -110,7 +122,7 @@ async function renderTeam() {
       if (statusText) statusText.textContent = "Tap to Check In";
     }
   } catch (err) {
-    console.error("Error loading team:", err);
+    console.error("Error rendering team:", err);
   }
 }
 
@@ -118,18 +130,16 @@ async function checkIn() {
   const user = getSavedUser();
   if (!user) return;
 
+  const today = getTodayStr();
   try {
-    const res = await fetch(`${API_BASE}/checkin`, {
+    await fetch('/api/checkins', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user.id })
+      body: JSON.stringify({ userId: user._id, date: today })
     });
-    
-    if (res.ok) {
-      renderTeam();
-    }
+    renderTeam();
   } catch (err) {
-    console.error("Check-in error:", err);
+    console.error("Error checking in:", err);
   }
 }
 
@@ -146,15 +156,14 @@ async function addMember() {
   if (!newUsername) return;
 
   try {
-    const res = await fetch(`${API_BASE}/admin/members`, {
+    const res = await fetch('/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ adminId: user.id, newUsername })
+      body: JSON.stringify({ username: newUsername })
     });
-    
     const data = await res.json();
     if (!res.ok) {
-      alert(data.error);
+      alert(data.error || "Error adding user");
       return;
     }
     
@@ -201,12 +210,18 @@ async function renderWorkout() {
     });
   }
 
-  // Render Exercises
-  const exerciseList = document.getElementById("exerciseList");
-  if (exerciseList) {
-    try {
-      const res = await fetch(`${API_BASE}/exercises`);
-      const allExercises = await res.json();
+  try {
+    const [exRes, checkinsRes] = await Promise.all([
+      fetch('/api/exercises'),
+      fetch('/api/checkins')
+    ]);
+    
+    const allExercises = await exRes.json();
+    const allCheckins = await checkinsRes.json();
+
+    // Render Exercises
+    const exerciseList = document.getElementById("exerciseList");
+    if (exerciseList) {
       const currentDayExercises = allExercises.filter(e => e.dayIdx === activeDayIdx);
 
       exerciseList.innerHTML = "";
@@ -214,28 +229,22 @@ async function renderWorkout() {
         exerciseList.innerHTML += `
           <div class="exercise-item">
             <span>${ex.name}</span>
-            <span class="delete-ex" onclick="deleteExercise(${ex.id})">❌</span>
+            <span class="delete-ex" onclick="deleteExercise('${ex._id}')">❌</span>
           </div>
         `;
       });
-    } catch (err) {
-      console.error("Error loading exercises:", err);
     }
-  }
 
-  // Render Weekly Chart from backend history
-  const chart = document.getElementById("weeklyChart");
-  if (chart) {
-    chart.innerHTML = "";
-    
-    try {
-      const res = await fetch(`${API_BASE}/workout/history?userId=${user.id}`);
-      const historyStrArr = await res.json();
-      const historySet = new Set(historyStrArr);
+    // Render Weekly Chart
+    const chart = document.getElementById("weeklyChart");
+    if (chart) {
+      chart.innerHTML = "";
+      
+      const userCheckins = allCheckins.filter(c => c.userId === user._id);
+      const historySet = new Set(userCheckins.map(c => c.date));
 
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       
-      // Last 6 days
       for (let i = 5; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
@@ -250,9 +259,9 @@ async function renderWorkout() {
           </div>
         `;
       }
-    } catch (err) {
-      console.error("Error loading history:", err);
     }
+  } catch (err) {
+    console.error("Error rendering workout page:", err);
   }
 }
 
@@ -268,15 +277,14 @@ async function addExercise() {
   if (!name) return;
 
   try {
-    const res = await fetch(`${API_BASE}/exercises`, {
+    await fetch('/api/exercises', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dayIdx: activeDayIdx, name })
     });
-    if (res.ok) {
-      input.value = "";
-      renderWorkout();
-    }
+    
+    input.value = "";
+    renderWorkout();
   } catch (err) {
     console.error("Error adding exercise:", err);
   }
@@ -284,10 +292,8 @@ async function addExercise() {
 
 async function deleteExercise(id) {
   try {
-    const res = await fetch(`${API_BASE}/exercises/${id}`, { method: 'DELETE' });
-    if (res.ok) {
-      renderWorkout();
-    }
+    await fetch(`/api/exercises/${id}`, { method: 'DELETE' });
+    renderWorkout();
   } catch (err) {
     console.error("Error deleting exercise:", err);
   }

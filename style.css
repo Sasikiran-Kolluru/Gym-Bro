@@ -1,157 +1,198 @@
-/* RESET */
+:root {
+  --bg: #0a0a0c;
+  --neon-primary: #00ffcc;
+  --neon-secondary: #ff00ff;
+  --text-main: #ffffff;
+  --text-muted: #888888;
+  --glass-bg: rgba(20, 20, 25, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 body {
+  background: var(--bg);
+  color: var(--text-main);
   overflow: hidden;
-  color: white;
-}
-
-/* NAVBAR */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 15px 30px;
   display: flex;
-  justify-content: space-between;
-  z-index: 10;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: 900;
-}
-
-.logo span {
-  color: #ff5252;
-}
-
-/* HERO */
-.hero {
-  position: relative;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
 }
 
-/* VIDEO */
-.bg-video {
+#bgvid {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -2;
+  transform: translateX(-50%) translateY(-50%);
   object-fit: cover;
+  filter: grayscale(80%) brightness(0.3);
 }
 
-/* OVERLAY */
 .overlay {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle farthest-corner at 9.8% 19.4%,
-    rgba(223,75,75,0.6) 11.6%,
-    rgba(20,12,12,0.9) 90.5%
-  );
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle, rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.9) 100%);
+  z-index: -1;
 }
 
-/* TEXT */
-.hero-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  align-items: center;
+.landing-container {
+  text-align: center;
+  z-index: 1;
+  animation: fadeInUp 1.2s ease-out;
 }
 
-/* ALIGNMENT FIX */
-.hero-content h1 {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  font-size: 120px;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1.glitch {
+  font-size: 6rem;
   font-weight: 900;
-  padding: 0 80px;
+  text-transform: uppercase;
+  position: relative;
+  color: var(--text-main);
+  text-shadow: 0 0 20px var(--neon-primary);
+  letter-spacing: 5px;
+  margin-bottom: 10px;
 }
 
-.left {
-  transform: translateX(-10px);
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 10px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
 }
 
-.right {
-  transform: translateX(40px); /* 👈 SHIFT RIGHT FIX */
+.neon-btn {
+  background: transparent;
+  color: var(--neon-primary);
+  border: 2px solid var(--neon-primary);
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2), inset 0 0 15px rgba(0, 255, 204, 0.2);
+  text-transform: uppercase;
 }
 
-/* LOGIN PANEL (CORNER) */
-.login-panel {
-  position: fixed;
-  top: 80px;
-  right: -350px; /* hidden */
-  width: 300px;
-  background: #111;
-  padding: 20px;
-  border-radius: 12px 0 0 12px;
-  transition: 0.3s;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.neon-btn:hover {
+  background: var(--neon-primary);
+  color: var(--bg);
+  box-shadow: 0 0 30px var(--neon-primary), inset 0 0 10px var(--neon-primary);
 }
 
-/* ACTIVE STATE */
-.login-panel.active {
-  right: 0;
+.neon-btn.solid {
+  background: var(--neon-primary);
+  color: var(--bg);
+  width: 100%;
+  margin-top: 20px;
 }
 
-/* HEADER */
+.neon-btn.solid:hover {
+  background: #00e6b8;
+  box-shadow: 0 0 30px var(--neon-primary);
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-panel.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.glass-panel:not(.active) {
+  transform: translate(-50%, -40%) scale(0.9);
+}
+
 .panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 15px;
 }
 
-/* CLOSE BUTTON */
-.close {
-  cursor: pointer;
-  font-size: 18px;
+.panel-header h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--text-main);
 }
 
-/* INPUT FIX */
-.login-panel input {
-  padding: 10px;
-  border-radius: 8px;
+.close-btn {
+  background: none;
   border: none;
-  width: 100%;
-  outline: none;
-}
-
-/* BUTTON */
-.comic-button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  color: #fff;
-  background-color: #ff5252;
-  border: 2px solid #000;
-  border-radius: 10px;
-  box-shadow: 5px 5px 0px #000;
-  transition: all 0.3s ease;
+  color: var(--text-muted);
+  font-size: 2rem;
   cursor: pointer;
+  transition: color 0.3s;
 }
 
-.comic-button:hover {
-  background-color: #fff;
-  color: #ff5252;
-  border: 2px solid #ff5252;
-  box-shadow: 5px 5px 0px #ff5252;
+.close-btn:hover {
+  color: var(--neon-secondary);
 }
 
-.comic-button:active {
-  background-color: #fcf414;
-  box-shadow: none;
-  transform: translateY(4px);
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+  border-color: var(--neon-primary);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1.glitch { font-size: 4rem; }
+  .glass-panel { width: 90%; padding: 30px; }
 }
