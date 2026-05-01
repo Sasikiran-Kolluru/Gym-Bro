@@ -21,8 +21,6 @@ async function connectToDatabase() {
   const uri = MONGODB_URI || 'mongodb://localhost:27017/gym-bro';
   
   const db = await mongoose.connect(uri, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
   });
   cachedDb = db;
