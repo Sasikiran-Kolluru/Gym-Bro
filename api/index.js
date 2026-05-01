@@ -37,7 +37,7 @@ app.use(async (req, res, next) => {
   } catch (err) {
     console.error('Database connection failed:', err);
     res.status(500).json({ 
-      error: 'Database connection failed. Please check your MONGODB_URI and Network Access settings in MongoDB Atlas.' 
+      error: `Database Error: ${err.message}. Please check your MONGODB_URI format, password, and MongoDB Atlas Network Access.` 
     });
   }
 });
