@@ -98,13 +98,13 @@ async function renderTeam() {
     let myStatus = null;
     
     members.forEach(member => {
-      // MongoDB IDs are returned as strings in ._id
-      if (member._id === user._id) myStatus = checkedInUserIds.has(member._id) ? today : null;
+      // JSON IDs are returned as strings in .id
+      if (member.id === user.id) myStatus = checkedInUserIds.has(member.id) ? today : null;
       
-      const isCheckedIn = checkedInUserIds.has(member._id);
+      const isCheckedIn = checkedInUserIds.has(member.id);
       list.innerHTML += `
         <div class="member">
-          <span>${member.username} ${member._id === user._id ? '(You)' : ''}</span>
+          <span>${member.username} ${member.id === user.id ? '(You)' : ''}</span>
           <div class="dot ${isCheckedIn ? 'green' : 'red'}"></div>
         </div>
       `;
@@ -135,7 +135,7 @@ async function checkIn() {
     await fetch('/api/checkins', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user._id, date: today })
+      body: JSON.stringify({ userId: user.id, date: today })
     });
     renderTeam();
   } catch (err) {
@@ -229,7 +229,7 @@ async function renderWorkout() {
         exerciseList.innerHTML += `
           <div class="exercise-item">
             <span>${ex.name}</span>
-            <span class="delete-ex" onclick="deleteExercise('${ex._id}')">❌</span>
+            <span class="delete-ex" onclick="deleteExercise('${ex.id}')">❌</span>
           </div>
         `;
       });
@@ -240,7 +240,7 @@ async function renderWorkout() {
     if (chart) {
       chart.innerHTML = "";
       
-      const userCheckins = allCheckins.filter(c => c.userId === user._id);
+      const userCheckins = allCheckins.filter(c => c.userId === user.id);
       const historySet = new Set(userCheckins.map(c => c.date));
 
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
