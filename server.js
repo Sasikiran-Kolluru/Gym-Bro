@@ -134,7 +134,7 @@ app.delete('/api/exercises/:id', (req, res) => {
 });
 
 // Serve frontend if not matching API
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
